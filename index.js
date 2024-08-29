@@ -2,6 +2,7 @@ const {
     DynamoDBClient,
     DescribeTableCommand,
     CreateTableCommand,
+    PutItemCommand,
   } = require("@aws-sdk/client-dynamodb");
   const REGION = "ap-southeast-1";
   const TABLE_NAME = "MySampleTable";
@@ -34,9 +35,24 @@ const {
     }
   }
   
+
+async function  createItem() {
+    const params = {
+        TableName: TABLE_NAME,
+        Item: {
+            id: {S: "1"},
+            name: {S: "Sample Item"},
+            descriptiom: {S: "This is a sample item"},
+        },
+    };
+    await ddbClient.send(new PutItemCommand(params));
+    console.log("Item inserted..")
+}
+
   async function main() {
     console.log("inside main method...");
     await CheckOrCreateTable();
+    await createItem();
   }
   
   main();
